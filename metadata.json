@@ -1,5 +1,5 @@
 {
-  "name": "Music Player",
+  "name": "PulsePlay",
   "description": "A modern local music and video player with automatic media discovery, real-time download detection, VLC-style gesture video player, and file management.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]

@@ -268,7 +268,7 @@ fun MusicLibraryScreen(
 
                         Column {
                             Text(
-                                text = if (uiState.mainTab == MainMediaTab.MUSIC) "Music Library" else "Video Player",
+                                text = if (uiState.mainTab == MainMediaTab.MUSIC) "PulsePlay Music" else "PulsePlay Video",
                                 style = MaterialTheme.typography.headlineMedium.copy(
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 20.sp

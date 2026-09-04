@@ -70,11 +70,11 @@ fun SplashScreen(
             Spacer(modifier = Modifier.height(28.dp))
 
             Text(
-                text = "MUSIC PLAYER",
+                text = "PULSEPLAY",
                 style = MaterialTheme.typography.titleLarge.copy(
                     fontWeight = FontWeight.Bold,
                     letterSpacing = 4.sp,
-                    fontSize = 20.sp
+                    fontSize = 22.sp
                 ),
                 color = Color.White
             )
@@ -82,7 +82,7 @@ fun SplashScreen(
             Spacer(modifier = Modifier.height(6.dp))
 
             Text(
-                text = "High Fidelity Offline Audio",
+                text = "Premium Music & Video Player",
                 style = MaterialTheme.typography.bodySmall.copy(
                     letterSpacing = 1.2.sp,
                     fontSize = 12.sp
