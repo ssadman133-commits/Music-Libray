@@ -70,7 +70,7 @@ fun PermissionView(
         Spacer(modifier = Modifier.height(28.dp))
 
         Text(
-            text = "Access Local Music",
+            text = "Access Local Media",
             style = MaterialTheme.typography.headlineMedium.copy(
                 fontWeight = FontWeight.Bold,
                 fontSize = 26.sp
@@ -82,7 +82,7 @@ fun PermissionView(
         Spacer(modifier = Modifier.height(10.dp))
 
         Text(
-            text = "To find and play your songs and automatically detect new downloads from Chrome, WhatsApp, or Telegram, please grant audio permission.",
+            text = "To find and play your music & videos and automatically detect new downloads from Chrome, WhatsApp, or Telegram, please grant storage permission.",
             style = MaterialTheme.typography.bodyMedium.copy(lineHeight = 22.sp),
             color = MusicTextSecondary,
             textAlign = TextAlign.Center
@@ -103,18 +103,18 @@ fun PermissionView(
             ) {
                 PermissionFeatureRow(
                     icon = Icons.Default.FolderOpen,
-                    title = "Automatic Music Scan",
-                    description = "Finds all audio files across your internal and SD storage without manual loading."
+                    title = "Automatic Media Scan",
+                    description = "Finds all music and video files across your internal and SD storage without manual loading."
                 )
                 PermissionFeatureRow(
                     icon = Icons.Default.DownloadDone,
                     title = "Real-time Download Detection",
-                    description = "Instant detection of new music files downloaded anywhere on your device."
+                    description = "Instant detection of new music and video files downloaded anywhere on your device."
                 )
                 PermissionFeatureRow(
                     icon = Icons.Default.Security,
                     title = "100% Private & Local",
-                    description = "Your music stays strictly on your phone. No files are ever uploaded."
+                    description = "Your media stays strictly on your phone. No files are ever uploaded."
                 )
             }
         }
@@ -134,7 +134,7 @@ fun PermissionView(
             )
         ) {
             Text(
-                text = "Grant Audio Permission",
+                text = "Grant Media Permission",
                 style = MaterialTheme.typography.bodyLarge.copy(
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp

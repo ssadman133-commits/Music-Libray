@@ -61,6 +61,7 @@ class MainActivity : ComponentActivity() {
                     val list = mutableListOf<String>()
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         list.add(Manifest.permission.READ_MEDIA_AUDIO)
+                        list.add(Manifest.permission.READ_MEDIA_VIDEO)
                         list.add(Manifest.permission.POST_NOTIFICATIONS)
                     } else {
                         list.add(Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -68,33 +69,37 @@ class MainActivity : ComponentActivity() {
                     list.toTypedArray()
                 }
 
-                fun checkHasAudioPermission(): Boolean {
-                    val audioPerm = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        Manifest.permission.READ_MEDIA_AUDIO
+                fun checkHasMediaPermission(): Boolean {
+                    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        val audioGranted = ContextCompat.checkSelfPermission(
+                            context,
+                            Manifest.permission.READ_MEDIA_AUDIO
+                        ) == PackageManager.PERMISSION_GRANTED
+
+                        val videoGranted = ContextCompat.checkSelfPermission(
+                            context,
+                            Manifest.permission.READ_MEDIA_VIDEO
+                        ) == PackageManager.PERMISSION_GRANTED
+
+                        audioGranted || videoGranted
                     } else {
-                        Manifest.permission.READ_EXTERNAL_STORAGE
+                        ContextCompat.checkSelfPermission(
+                            context,
+                            Manifest.permission.READ_EXTERNAL_STORAGE
+                        ) == PackageManager.PERMISSION_GRANTED
                     }
-                    return ContextCompat.checkSelfPermission(
-                        context,
-                        audioPerm
-                    ) == PackageManager.PERMISSION_GRANTED
                 }
 
                 val permissionLauncher = rememberLauncherForActivityResult(
                     contract = ActivityResultContracts.RequestMultiplePermissions()
-                ) { permissions ->
-                    val audioPerm = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        Manifest.permission.READ_MEDIA_AUDIO
-                    } else {
-                        Manifest.permission.READ_EXTERNAL_STORAGE
-                    }
-                    val isAudioGranted = permissions[audioPerm] == true || checkHasAudioPermission()
-                    viewModel.onPermissionResult(isAudioGranted)
+                ) { _ ->
+                    val isGranted = checkHasMediaPermission()
+                    viewModel.onPermissionResult(isGranted)
                 }
 
                 // Initial permission check & request
                 LaunchedEffect(Unit) {
-                    val alreadyGranted = checkHasAudioPermission()
+                    val alreadyGranted = checkHasMediaPermission()
                     viewModel.onPermissionResult(alreadyGranted)
                     if (!alreadyGranted) {
                         permissionLauncher.launch(requiredPermissions)
@@ -105,7 +110,7 @@ class MainActivity : ComponentActivity() {
                 DisposableEffect(lifecycleOwner) {
                     val observer = LifecycleEventObserver { _, event ->
                         if (event == Lifecycle.Event.ON_RESUME) {
-                            val granted = checkHasAudioPermission()
+                            val granted = checkHasMediaPermission()
                             viewModel.onPermissionResult(granted)
                             if (granted) {
                                 viewModel.refreshLibrary()

@@ -221,6 +221,35 @@ class MusicRepository(
         }
     }
 
+    /**
+     * Delete song with modern Android 10+ createDeleteRequest or fallback direct delete
+     */
+    fun createDeleteIntent(uris: List<Uri>): android.app.PendingIntent? {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            return MediaStore.createDeleteRequest(context.contentResolver, uris)
+        }
+        return null
+    }
+
+    suspend fun deleteDirectly(uri: Uri): Boolean = withContext(Dispatchers.IO) {
+        try {
+            val rows = context.contentResolver.delete(uri, null, null)
+            if (rows > 0) {
+                scanSongs()
+                true
+            } else {
+                false
+            }
+        } catch (e: Exception) {
+            Log.e("MusicRepository", "Direct delete song failed", e)
+            false
+        }
+    }
+
+    fun removeSongFromLocalState(songId: Long) {
+        _rawSongs.value = _rawSongs.value.filter { it.id != songId }
+    }
+
     fun unregisterContentObserver() {
         contentObserver?.let {
             try {

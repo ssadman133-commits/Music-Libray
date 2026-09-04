@@ -3,6 +3,7 @@ package com.example.ui.components
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,9 +13,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Equalizer
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -22,6 +27,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,7 +40,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.data.model.Song
-import com.example.ui.theme.MusicDarkSurface
+import com.example.ui.theme.MusicAccentRed
 import com.example.ui.theme.MusicDarkSurfaceVariant
 import com.example.ui.theme.MusicPrimary
 import com.example.ui.theme.MusicTertiary
@@ -46,8 +54,11 @@ fun SongItem(
     isPlaying: Boolean,
     onSongClick: () -> Unit,
     onFavoriteToggle: () -> Unit,
+    onDeleteClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var showMenu by remember { mutableStateOf(false) }
+
     val backgroundColor by animateColorAsState(
         targetValue = if (isCurrentSong) MusicDarkSurfaceVariant else Color.Transparent,
         label = "song_item_bg"
@@ -113,7 +124,7 @@ fun SongItem(
                 )
             }
 
-            Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.width(6.dp))
 
             Text(
                 text = song.formattedDuration,
@@ -124,7 +135,7 @@ fun SongItem(
             IconButton(
                 onClick = onFavoriteToggle,
                 modifier = Modifier
-                    .size(44.dp)
+                    .size(40.dp)
                     .testTag("song_favorite_${song.id}")
             ) {
                 Icon(
@@ -133,6 +144,42 @@ fun SongItem(
                     tint = if (song.isFavorite) MusicTertiary else MusicTextSecondary.copy(alpha = 0.6f),
                     modifier = Modifier.size(20.dp)
                 )
+            }
+
+            Box {
+                IconButton(
+                    onClick = { showMenu = true },
+                    modifier = Modifier
+                        .size(36.dp)
+                        .testTag("song_menu_${song.id}")
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.MoreVert,
+                        contentDescription = "More Options",
+                        tint = MusicTextSecondary.copy(alpha = 0.7f),
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+
+                DropdownMenu(
+                    expanded = showMenu,
+                    onDismissRequest = { showMenu = false }
+                ) {
+                    DropdownMenuItem(
+                        text = { Text("Delete Song", color = MusicAccentRed) },
+                        onClick = {
+                            showMenu = false
+                            onDeleteClick()
+                        },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.Delete,
+                                contentDescription = "Delete",
+                                tint = MusicAccentRed
+                            )
+                        }
+                    )
+                }
             }
         }
     }
