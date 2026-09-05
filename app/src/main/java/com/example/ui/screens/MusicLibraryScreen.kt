@@ -140,24 +140,14 @@ fun MusicLibraryScreen(
         return
     }
 
-    // Video Player Fullscreen Modal (VLC Style)
-    if (uiState.activeVideoPlaying != null) {
-        VlcVideoPlayerView(
-            video = uiState.activeVideoPlaying!!,
-            onClose = { viewModel.closeVideoPlayer() },
-            onDeleteVideo = { video ->
-                videoPendingDeletion = video
-            }
-        )
-    }
-
-    Scaffold(
-        modifier = modifier
-            .fillMaxSize()
-            .background(MusicDarkBackground)
-            .windowInsetsPadding(WindowInsets.statusBars),
-        containerColor = MusicDarkBackground,
-        bottomBar = {
+    Box(modifier = modifier.fillMaxSize()) {
+        Scaffold(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MusicDarkBackground)
+                .windowInsetsPadding(WindowInsets.statusBars),
+            containerColor = MusicDarkBackground,
+            bottomBar = {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -545,6 +535,18 @@ fun MusicLibraryScreen(
             },
             onDismiss = { videoPendingDeletion = null }
         )
+    }
+
+    // Video Player Fullscreen Modal (VLC Style) rendered on top of Scaffold
+    if (uiState.activeVideoPlaying != null) {
+        VlcVideoPlayerView(
+            video = uiState.activeVideoPlaying!!,
+            onClose = { viewModel.closeVideoPlayer() },
+            onDeleteVideo = { video ->
+                videoPendingDeletion = video
+            }
+        )
+    }
     }
 }
 
